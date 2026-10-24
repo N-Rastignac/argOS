@@ -1,0 +1,12 @@
+osdev-sandbox :: module 01 :: environnement
+serial: ok
+multiboot magic ok
+[selftest] begin
+[selftest] char=Z str=ok pct=%
+[selftest] dec=42 neg=-42 zero=0
+[selftest] u=7 max=4294967295
+[selftest] hex=deadbeef HEX=CAFE ptr=0x1000
+[selftest] min=-2147483648
+[selftest] seq=12 i=-3 null=(null)
+[selftest] end
+halting.

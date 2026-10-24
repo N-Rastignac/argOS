@@ -1,0 +1,42 @@
+# gdbinit — chargé par `make debug` (gdb -x tools/gdbinit)
+# QEMU a été lancé avec -s -S : il écoute sur :1234 et le CPU est gelé à l'entrée.
+set confirm off
+set pagination off
+# tu lis de l'Intel en RE ; enlève pour AT&T
+set disassembly-flavor intel    
+set architecture i386
+target remote localhost:1234
+
+# Afficher le contenu texte de l'écran VGA (25 lignes) depuis GDB.
+define vga
+  set $row = 0
+  while $row < 25
+    set $p = (unsigned short *)0xb8000 + $row * 80
+    set $col = 0
+    set $line = ""
+    printf "%2d| ", $row
+    while $col < 80
+      set $c = *($p + $col) & 0xff
+      if $c < 32 || $c > 126
+        printf " "
+      else
+        printf "%c", $c
+      end
+      set $col = $col + 1
+    end
+    printf "\n"
+    set $row = $row + 1
+  end
+end
+document vga
+Affiche les 25 lignes de la mémoire VGA texte (0xB8000).
+end
+
+define regs
+  info registers eax ebx ecx edx esi edi ebp esp eip eflags cs ds es ss
+end
+
+# Breakpoint par défaut : l'entrée C du noyau.
+break kernel_main
+echo \n[gdbinit] CPU gelé à _start. Tape 'continue' (c) pour atteindre kernel_main.\n
+echo [gdbinit] Commandes utiles : layout split, si/ni, x/16xh 0xb8000, vga, regs, bt\n\n
