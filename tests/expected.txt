@@ -1,4 +1,4 @@
-osdev-sandbox :: module 01 :: environnement
+argOS
 serial: ok
 multiboot magic ok
 [selftest] begin

@@ -20,5 +20,5 @@ while IFS= read -r want; do
   else echo "  FAIL  $want"; fail=$((fail+1)); fi
 done < "$exp"
 echo
-echo "$pass réussi(s), $fail échec(s)   (log complet : $log)"
+echo "$pass passed, $fail failed   (complete log : $log)"
 [ $fail = 0 ]

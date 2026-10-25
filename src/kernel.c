@@ -21,7 +21,7 @@
 /* Durée d'attente d'une touche avant de continuer, en appels à io_wait().
  * Approximative : sans timer (PIT), la durée réelle dépend de la machine hôte.
  * Doit rester bien en dessous du timeout de `make test` (8 s). */
-#define ECHO_WAIT_LOOPS 20000000
+#define ECHO_WAIT_LOOPS 40000000
 
 /* Attend une touche sur le port série. Retourne 1 si une touche est arrivée. */
 static int wait_for_key(uint32_t loops)
@@ -37,7 +37,7 @@ static int wait_for_key(uint32_t loops)
 /* Réaffiche chaque caractère reçu sur le port série, jusqu'à Ctrl-D. */
 static void echo_loop(void)
 {
-    kprintf("echo : tape du texte, Ctrl-D pour quitter\n");
+    kprintf("echo : write text, Ctrl-D to exit\n");
     for (;;) {
         char c = serial_getchar();
         if (c == KEY_QUIT) {
@@ -82,7 +82,8 @@ void kernel_main(uint32_t magic, uint32_t mbi_addr)
     vga_init();
     int serial_ok = serial_init();
 
-    //vga_set_color(VGA_WHITE, VGA_BLUE);
+    vga_set_color(VGA_WHITE, VGA_BLUE);
+    kprintf("argOS\n");
     vga_set_color(VGA_LIGHT_GREY, VGA_BLACK);
 
     kprintf("serial: %s\n", serial_ok == 0 ? "ok" : "loopback FAILED");
@@ -96,7 +97,7 @@ void kernel_main(uint32_t magic, uint32_t mbi_addr)
     selftest();
 
     /* Mode écho optionnel : sans touche (cas de `make test`), on continue. */
-    kprintf("appuie sur une touche pour le mode echo...\n");
+    kprintf("press any key to enter echo mode...\n");
     if (wait_for_key(ECHO_WAIT_LOOPS))
         echo_loop();
 
